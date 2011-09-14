@@ -18,6 +18,87 @@ For convenience, copy the executable bin/phantomjs to some directory in your PAT
 	git checkout 1.2
 	qmake && make
 
+### CentOS 5
+
+http://rhythmicalmedia.com/?p=146
+
+Add this to `/etc/yum.repos.d/CentOS-Base.repo`
+
+	#ATrpms
+	[atrpms]
+	name= CentOS-$releasever - ATrpms
+	baseurl=http://dl.atrpms.net/el$releasever-$basearch/atrpms/testing
+	gpgcheck=1
+	gpgkey=http://ATrpms.net/RPM-GPG-KEY.atrpms
+	enabled=1
+
+Then
+	
+	yum install qt47-devel qt47-webkit qt47-webkit-devel sqlite-devel
+	
+N.B. But make sure qt4 is uninstalled with `yum remove qt4-devel`
+
+Then
+
+	git clone git://github.com/ariya/phantomjs.git &amp;&amp; cd phantomjs
+	/usr/lib64/qt47/bin/qmake-qt47 && make
+	
+But.... wait... you're still not getting it working? You may need to install some sort of X11 hacks
+
+[http://code.google.com/p/phantomjs/wiki/XvfbSetup](http://code.google.com/p/phantomjs/wiki/XvfbSetup)
+
+	sudo yum install xorg-x11-server-Xvfb xorg-x11-server-Xorg xorg-x11-fonts* -y
+	
+Make this file `/etc/init.d/Xvfb`
+
+	#! /bin/sh
+
+	### BEGIN INIT INFO
+	# Provides: Xvfb
+	# Required-Start: $local_fs $remote_fs
+	# Required-Stop:
+	# X-Start-Before:
+	# Default-Start: 2 3 4 5
+	# Default-Stop:
+	### END INIT INFO
+
+	N=/etc/init.d/Xvfb
+
+	set -e
+
+	case "$1" in
+	  start)
+	Xvfb :0 -screen 0 1024x768x24 &
+	;;
+	  stop|reload|restart|force-reload)
+	;;
+	  *)  
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2exit 1
+	;;
+	esac
+
+	exit 0
+
+Give it permissions
+
+	sudo chmod 755 /etc/init.d/Xvfb
+	
+Start it 
+	
+	sudo /etc/init.d/Xvfb start
+
+Add this to your ~/.bash_profile
+
+	echo "alias phantomjs='DISPLAY=:0 phantomjs'" >> ~/.bash_profile
+
+Reload your session
+
+	source ~/.bash_profile
+
+
+
+
+
 ### Mac OS X
 With homebrew	
 

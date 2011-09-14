@@ -1,0 +1,4 @@
+#! /bin/sh
+
+# Hack b/c you need x11 on unix
+DISPLAY=:0 phantomjs $*

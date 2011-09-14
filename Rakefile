@@ -21,6 +21,8 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{captures screenshots of web pages}
   gem.email = "jayamster@gmail.com"
   gem.authors = ["Jason Amster"]
+  gem.bindir = 'bin'
+  gem.executables = ['phantomx11']
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
